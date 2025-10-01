@@ -1,0 +1,20 @@
+<launch>
+
+    <arg name="simple_controller" default="False" />
+    <arg name="use_sim_time" default="True" />
+
+    <node pkg="controller_manager" exec="spawner" args="joint_state_broadcaster --controller-manager /controller_manager">
+        <param name="use_sim_time" value="$(var use_sim_time)" />
+    </node>
+
+    <node pkg="controller_manager" exec="spawner" args="bot_controller --controller-manager /controller_manager" unless="$(var simple_controller)">
+        <param name="use_sim_time" value="$(var use_sim_time)" />
+    </node>
+
+    <group if="$(var simple_controller)">
+        <node pkg="controller_manager" exec="spawner" args="simple_controller --controller-manager /controller_manager" />
+        <node pkg="bot_controller" exec="noisy_controller.py" />
+        <node pkg="bot_controller" exec="simple_controller.py" />
+    </group>
+
+</launch>

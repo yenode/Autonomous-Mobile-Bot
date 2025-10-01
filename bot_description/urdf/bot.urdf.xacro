@@ -1,0 +1,403 @@
+<?xml version="1.0"?>
+<robot name="turtlebot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="bot_ros2_control.xacro"/>
+
+  <!-- Base Footprint (reference frame) -->
+  <link name="base_footprint"/>
+
+  <!-- Main Base Link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.03 0 0" rpy="0 0 0"/>
+      <mass value="2"/>
+      <inertia ixx="0.004883" ixy="0" ixz="0" iyy="0.003067" iyz="0" izz="0.007683"/>
+    </inertial>
+
+    <collision name="base_collision">
+      <origin xyz="0.0465 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.135 0.17 0.04"/>
+      </geometry>
+      <surface>
+        <contact>
+          <ode>
+            <min_depth>0.001</min_depth>
+            <max_vel>0</max_vel>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+
+    <visual name="base_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box  size="0.17 0.17 0.035"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0.2 0.4 0.8 1"/>
+      </material>
+    </visual>
+
+  </link>
+
+  <!-- Fixed joint between base_footprint and base_link -->
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.01" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ========== LEFT WHEEL ========== -->
+  
+
+  <link name="base_left_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.5"/>
+      <inertia ixx="0.000091" ixy="0" ixz="0" iyy="0.000182" iyz="0" izz="0.000091"/>
+    </inertial>
+
+    <visual name="base_left_wheel_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.027" length="0.011"/>
+      </geometry>
+      <material name="red">
+        <color rgba="0.8 0.2 0.2 1"/>
+      </material>
+    </visual>
+
+    <collision name="base_left_wheel_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.027" length="0.011"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="base_left_wheel"/>
+    <origin xyz="-0.055 0.08 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+    <!-- ========== RIGHTWHEEL ========== -->
+  
+
+  <link name="base_right_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.5"/>
+      <inertia ixx="0.000091" ixy="0" ixz="0" iyy="0.000182" iyz="0" izz="0.000091"/>
+    </inertial>
+
+    <visual name="base_right_wheel_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.027" length="0.011"/>
+      </geometry>
+      <material name="red">
+        <color rgba="0.8 0.2 0.2 1"/>
+      </material>
+    </visual>
+
+    <collision name="base_right_wheel_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.027" length="0.011"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="base_right_wheel"/>
+    <origin xyz="-0.055 -0.08 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+<!-- =========CASTER WHEEL========== -->
+
+  <link name="caster_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.01"/>
+      <inertia ixx="0.000000010" ixy="0" ixz="0" iyy="0.000000010" iyz="0" izz="0.000000010"/>
+    </inertial>
+
+    <visual name="caster_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.005"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0.2 0.7 0.3 1"/>
+      </material>
+    </visual>
+
+    <collision name="caster_wheel_collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.005"/>
+      </geometry>
+      <surface>
+        <contact>
+          <ode>
+            <min_depth>0.001</min_depth>
+            <max_vel>0</max_vel>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+  </link>
+
+  <joint name="caster_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_wheel"/>
+    <origin xyz="0.075 0 -0.02" rpy="0 0 0"/>
+  </joint> 
+ 
+<!-- ============================================ -->
+
+   <link name="rgb_camera">
+    <inertial>
+    <origin xyz="-0.03 0 0" rpy="0 0 0"/>
+        <mass value="0.1" />
+        <inertia ixx="0.000023" ixy="0.0" ixz="0"
+            iyy="0.000011" iyz="0" izz="0.000030" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 1.57079632679" />
+      <geometry>
+         <mesh filename="file:///home/aditya-pachauri/turtlebot_ros_cir_ws/src/bot_description/meshes/3dCamera.DAE" scale="1 1 1"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+          <box size="0.03 0.05 0.02" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="0.085 0 0.002" rpy="0 0.0 0"/>
+    <parent link="base_link"/>
+    <child link="rgb_camera"/>
+    <axis xyz="0.0 0 0"/>
+  </joint>
+
+  <joint type="fixed" name="camera_optical_joint">
+    <origin xyz="0 0 0.151" rpy="0 0 0"/>
+    <parent link="rgb_camera"/>
+    <child link="camera_link_optical"/>
+  </joint> 
+
+   <link name="camera_link_optical">
+  </link>
+
+    <gazebo reference="camera_link_optical">
+    <sensor name="camera" type="camera">
+      <camera>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>15</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+        <optical_frame_id>camera_link_optical</optical_frame_id>
+        <camera_info_topic>camera/camera_info</camera_info_topic>
+      </camera>
+      <always_on>1</always_on>
+      <update_rate>20</update_rate>
+      <visualize>true</visualize>
+      <topic>camera/image_raw</topic>
+    </sensor>
+    </gazebo>
+
+ 
+  <link name="laser_link">
+    <!-- <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0.3" />
+            <inertia ixx="0.000458" ixy="0.0" ixz="0"
+            iyy="0.000458" iyz="0" izz="0.000399" />
+    </inertial> -->
+
+    <visual>
+      <geometry>
+        <mesh filename="file:///home/aditya-pachauri/turtlebot_ros_cir_ws/src/bot_description/meshes/lidar_3d_v1.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0.03585" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.0516" length="0.0717" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="lidar_base">
+    <!-- <inertial>
+      <origin xyz="0 0 0.011" rpy="0 0 0"/>
+      <mass value="0.2" />
+      <inertia ixx="0.000043" ixy="0.0" ixz="0"
+          iyy="0.000043" iyz="0" izz="0.000266" />
+    </inertial> -->
+
+    <visual>
+    <origin xyz="0 0 0.011" rpy="0 0 0"/>
+        <material name="black">
+        <color rgba="0.15 0.15 0.15 1"/>
+      </material>
+      <geometry>
+        <cylinder radius="0.0516" length="0.032" />
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0.011" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.0516" length="0.032" />
+      </geometry>
+    </collision>
+  </link>
+
+    <joint name="lidar_base_joint" type="fixed">
+    <origin xyz="0 0 0.02" rpy="0 0.0 3.14"/>
+    <parent link="base_link"/>
+    <child link="lidar_base"/>
+    <axis xyz="0.0 0.0 1.0"/>
+  </joint>
+
+  <joint name="laser_joint" type="fixed">
+    <origin xyz="0 0 0.046" rpy="0 0.0 3.14"/>
+    <parent link="base_link"/>
+    <child link="laser_link"/>
+    <axis xyz="0.0 0.0 1.0"/>
+  </joint>
+
+  <gazebo reference="laser_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <topic>scan</topic>
+      <update_rate>5</update_rate>
+      <gz_frame_id>laser_link</gz_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>1024</samples>
+            <resolution>1.00000</resolution>
+            <min_angle>0.000000</min_angle>
+            <max_angle>6.280000</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120000</min>
+          <max>12.0</max>
+          <resolution>0.02</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+    </sensor>
+  </gazebo> 
+
+
+  <joint name="navsat_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link"/>
+    <child link="navsat_link" />
+  </joint>
+
+  <link name="navsat_link">
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link"/>
+    <child link="imu_link" />
+  </joint>
+
+  <link name="imu_link">
+  </link>
+
+  <gazebo reference="imu_link">
+    <sensor name="imu" type="imu">
+      <always_on>1</always_on>
+      <update_rate>50</update_rate>
+      <visualize>true</visualize>
+      <topic>imu</topic>
+      <enable_metrics>true</enable_metrics>
+      <gz_frame_id>imu_link</gz_frame_id>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="navsat_link">
+    <sensor name="navsat" type="navsat">
+      <always_on>1</always_on>
+      <update_rate>1</update_rate>
+      <topic>navsat</topic>
+      <gz_frame_id>navsat_link</gz_frame_id>
+    </sensor>
+  </gazebo> 
+
+ <!-- Gazebo wheel physics -->
+  <gazebo reference="base_left_wheel">
+    <mu1>1.0</mu1>
+    <mu2>0.8</mu2>
+    <kp>100000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1</maxVel>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+
+  <gazebo reference="base_right_wheel">
+    <mu1>1.0</mu1>
+    <mu2>0.8</mu2>
+    <kp>100000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1</maxVel>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>/home/aditya-pachauri/turtlebot_ros_cir_ws/src/bot_controller/config/bot_controller.yaml</parameters>
+    </plugin>
+    
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+      <initial_orientation_as_reference>false</initial_orientation_as_reference>
+    </plugin>
+
+    
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+        <render_engine>ogre2</render_engine>
+    </plugin>
+
+    
+    <plugin filename="gz-sim-navsat-system" name="gz::sim::systems::NavSat">
+    </plugin>
+
+  </gazebo>
+
+</robot>

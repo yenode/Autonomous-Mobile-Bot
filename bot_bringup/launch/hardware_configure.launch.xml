@@ -1,0 +1,7 @@
+<launch>
+    <arg name="arduino_configure_path" default="$(find-pkg-share arduino_bridge_new)"/>
+    <arg name="lidar_configure_path" default="$(find-pkg-share urg_node2)"/>
+    <include file="$(var arduino_configure_path)/launch/complete_bridge_persistent.launch.py"/>
+    <include file="$(var lidar_configure_path)/launch/urg_node2_persistent.launch.py"/>
+    <node pkg="imu_mpu6050" exec="imu_publisher"/>
+</launch>
