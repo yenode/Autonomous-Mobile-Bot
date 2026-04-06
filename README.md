@@ -82,7 +82,7 @@ ros2 launch bot_bringup hardware_configure.launch.xml
 ```
 ## Credits
 * Software & ROS2 Integration: yenode
-* Hardware Design & Management: hexqolff
+* Hardware Design & Management: [hexwolff](https://github.com/hexwolff)
 
 ## License
 This project is licensed under the MIT License.
